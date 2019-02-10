@@ -174,7 +174,7 @@ class FallingParticle (Particle):
 
 class ElectricCharge (Particle):
 
-    def __init__(self,m = 1.0, xv0 = np.array([0.0,0,0,0,0,0]), tf = 10.0,  dt = 0.1, E = np.array([0,0,0]), B= np.array([0,0,0]), e = 1.0):
+    def __init__(self,m = 1.0, xv0 = np.array([0.0,0,0,0,0,0]), tf = 10.0,  dt = 0.1, E = np.array([0,0,0]), B= np.array([0,0,0]), e = 0.0):
         self.m = m
         super().__init__(xv0,tf,dt)
         self.E = E
