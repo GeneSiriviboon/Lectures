@@ -177,12 +177,12 @@ class ElectricCharge (Particle):
     def __init__(self,m = 1.0, xv0 = np.array([0.0,0,0,0,0,0]), tf = 10.0,  dt = 0.1, E = np.array([0,0,0]), B= np.array([0,0,0]), e = 0.0):
         self.m = m
         super().__init__(xv0,tf,dt)
-        self.E = E
-        self.B = B
+        self.E = np.array(E)
+        self.B = np.array(B)
         self.e = e
 
     def F(self, xv, t):
         Ex,Ey,Ez =self.E[0],self.E[1],self.E[2]
         Bx,By,Bz =self.B[0],self.B[1],self.B[2]
         vx, vy, vz = self.xv[3],self.xv[4],self.xv[5]
-        return self.e*(np.array([Ex+vy*Bz-vz*By, Ey+vz*Bx-vx*Bz, Ez+vx*By-vy*Bx]))
+        return self.e*(self.E + np.cross(xv[3:6],self.B))
