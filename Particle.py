@@ -2,19 +2,29 @@
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt # for plotting
 import numpy as np
+
 import copy
 
-class Particle (object):
+
+class Particle(object):
 
     """Class that describes particle"""
     m = 1.0
 
-    def __init__(self, xv0=np.array([1.0, 0.0, 0.0, 0.0, 0.0, 0.0]),  tf = 10.0, dt = 0.001):
-        self.xv = xv0
+    def __init__(self, x0=1.0, v0=0.0,  tf = 10.0, dt = 0.001):
+        self.x = x0
+        self.v = v0
+>>>>>>> upstream/master
         self.t = 0.0
         self.tf = tf
         self.dt = dt
+
+        self.tlabel = 'time (s)'
+        self.xlabel = 'x (m)'
+        self.vlabel = 'v (m/s)'
+
         npoints = int(tf/dt) # always starting at t = 0.0
+        self.npoints = npoints
         self.tarray = np.linspace(0.0, tf,npoints, endpoint = True) # include final timepoint
         self.xv0 = xv0 # NumPy array with initial position and velocity
 
@@ -28,10 +38,31 @@ class Particle (object):
         """
         Take a single time step using Euler method
         """
-        a = self.F(self.xv, self.t) / self.m
-        self.xv[0:3] += self.xv[3:6] * self.dt
-        self.xv[3:6] += a * self.dt
-        #print(self.xv)
+
+        a = self.F(self.x, self.v, self.t) / self.m
+        self.x += self.v * self.dt
+        self.v += a * self.dt
+        self.t += self.dt
+
+    def RK4_step(self):
+        """
+        Take a single time step using RK4 midpoint method
+        """
+        a1 = self.F(self.x, self.v, self.t) / self.m
+        k1 = np.array([self.v, a1])*self.dt
+
+        a2 = self.F(self.x+k1[0]/2, self.v+k1[1]/2, self.t+self.dt/2) / self.m
+        k2 = np.array([self.v+k1[1]/2 ,a2])*self.dt
+
+        a3 = self.F(self.x+k2[0]/2, self.v+k2[1]/2, self.t+self.dt/2) / self.m
+        k3 = np.array([self.v+k2[1]/2, a3])*self.dt
+
+        a4 = self.F(self.x+k3[0], self.v+k3[1], self.t+self.dt) / self.m
+        k4 = np.array([self.v+k3[1], a4])*self.dt
+
+        self.x += (k1[0]+ k4[0])/6 + (k2[0] + k3[0])/3
+        self.v += (k1[1]+ k4[1])/6 + (k2[1] + k3[1])/3
+
         self.t += self.dt
 
     # def RK4_step(self):
@@ -160,7 +191,7 @@ class Particle (object):
         ax1.legend()
         ax2.legend()
 
-class FallingParticle (Particle):
+class FallingParticle(Particle):
 
     """Subclass of Particle Class that describes a falling particle"""
     g = np.array([0.0, 0.0, 10.0])
