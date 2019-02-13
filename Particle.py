@@ -14,7 +14,6 @@ class Particle(object):
     def __init__(self, x0=1.0, v0=0.0,  tf = 10.0, dt = 0.001):
         self.x = x0
         self.v = v0
->>>>>>> upstream/master
         self.t = 0.0
         self.tf = tf
         self.dt = dt

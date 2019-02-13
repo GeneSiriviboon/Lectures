@@ -131,11 +131,7 @@ class Particle (object):
                 ax1.plot(self.tarray, self.xv[:, 0], "k", label = 'odeint')
             if pt == 'phase':
                 ax1.plot(self.xv[:, 0], self.xv[:, 1], "k",'.', label = 'odeint')
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> upstream/master
         if hasattr(self,'x_euler'):
 
             if pt == 'trajectory':
